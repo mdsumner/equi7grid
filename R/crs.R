@@ -1,4 +1,3 @@
-globalVariables("equi7grid_crs")
 
 #' equi7grid_crs
 #'
@@ -13,8 +12,11 @@ NULL
 #' @return character vector of PROJ strings
 #' @export
 #'
+#' @importFrom utils data
 #' @examples
 #' crs7()
 crs7 <- function() {
-  get("equi7grid_crs")
+  e <- environment()
+  data("equi7grid_crs", envir = e)
+  e$equi7grid_crs
 }

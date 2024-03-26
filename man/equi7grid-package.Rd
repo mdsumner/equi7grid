@@ -4,9 +4,9 @@
 \name{equi7grid-package}
 \alias{equi7grid}
 \alias{equi7grid-package}
-\title{equi7grid: What the Package Does (One Line, Title Case)}
+\title{equi7grid: Use 'Equi7Grid'}
 \description{
-What the package does (one paragraph).
+Provides helpers for 'Equi7Grid' a global system of 7 parts for regionalizing high resolution satellite imagery.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Michael Sumner \email{mdsumner@gmail.com}
 
 }
 \keyword{internal}
