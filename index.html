@@ -80,14 +80,16 @@
 <!-- badges: start -->
 
 <p>The goal of equi7grid is … currently a barebones get equi7 and plot it.</p>
-<p>The <a href="https://github.com/TUW-GEO/Equi7Grid" class="external-link">Equi7Grid</a> is a project here: <a href="https://github.com/TUW-GEO/Equi7Grid" class="external-link uri">https://github.com/TUW-GEO/Equi7Grid</a></p>
-<p>It aims to define 7 global zones that are better than the current UTM and MGRS grid for classifying high resolution satellite imagery.</p>
+<p>The <a href="https://github.com/TUW-GEO/Equi7Grid" class="external-link">Equi7Grid</a> is a project that aims to define 7 global zones that are better than the current UTM and MGRS grid for classifying high resolution satellite imagery. Here we provide a single simple endpoint Geopackage url with the 7 zones in it with straightforward layer names:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="st">"/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid.gpkg"</span></span></code></pre></div>
+<p>The layers are these (note ‘NA’ is slightly unfortunate in R, but oh well).</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="st">"AF"</span>, <span class="st">"AN"</span>, <span class="st">"AS"</span>, <span class="st">"EU"</span>, <span class="st">"NA"</span>, <span class="st">"OC"</span>, <span class="st">"SA"</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>This plots each zone with its local centre in native Azimuthal Equidistant projection, the orange point shows the poles when they are in the frame.</p>
 <p>Note that we have a single vector source Geopackage, with the 7 zones in it, each in their own native projection.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mdsumner/equi7grid" class="external-link">equi7grid</a></span><span class="op">)</span></span>
 <span><span class="va">dsn</span> <span class="op">&lt;-</span> <span class="st">"/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid.gpkg"</span></span>
 <span></span>
@@ -127,7 +129,7 @@
 <p><img src="reference/figures/README-example-1.png" width="100%"></p>
 <p>In the package we can read the entire set from a single FlatGeobuf, but you’ll need to use them locally as they don’t make sense in one single CRS.</p>
 <p>The crs is recorded on each, but obviously we can craft our own scene and projection, here we just focus on the south in LAEA.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mdsumner/equi7grid" class="external-link">equi7grid</a></span><span class="op">)</span></span>
 <span><span class="va">fgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/equi7_longlat.fgb"</span>, package <span class="op">=</span> <span class="st">"equi7grid"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
