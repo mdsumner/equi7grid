@@ -21,9 +21,19 @@ knitr::opts_chunk$set(
 
 The goal of equi7grid is ... currently a barebones get equi7 and plot it. 
 
-The [Equi7Grid](https://github.com/TUW-GEO/Equi7Grid) is a project here: https://github.com/TUW-GEO/Equi7Grid
+The [Equi7Grid](https://github.com/TUW-GEO/Equi7Grid) is a project that aims to define 7 global zones that are better than the current UTM and MGRS grid for classifying high resolution satellite imagery. 
+Here we provide a single simple endpoint Geopackage url with the 7 zones in it with straightforward layer names: 
 
-It aims to define 7 global zones that are better than the current UTM and MGRS grid for classifying high resolution satellite imagery. 
+```
+"/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid.gpkg"
+```
+
+The layers are these (note 'NA' is slightly unfortunate in R, but oh well). 
+
+```
+"AF", "AN", "AS", "EU", "NA", "OC", "SA"
+```
+
 
 
 ## Example
