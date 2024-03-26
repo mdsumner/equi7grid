@@ -8,32 +8,41 @@
 
 The goal of equi7grid is … currently a barebones get equi7 and plot it.
 
+The [Equi7Grid](https://github.com/TUW-GEO/Equi7Grid) is a project here:
+<https://github.com/TUW-GEO/Equi7Grid>
+
+It aims to define 7 global zones that are better than the current UTM
+and MGRS grid for classifying high resolution satellite imagery.
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This plots each zone with its local centre in native Azimuthal
+Equidistant projection, the orange point shows the poles when they are
+in the frame.
 
 ``` r
-
+library(equi7grid)
 f <- fs::dir_ls("data-raw", regexp = "fgb$")
-crs <- c(AF = '+proj=aeqd +lat_0=8.5 +lon_0=21.5 +x_0=5621452.01998 +y_0=5990638.42298 +datum=WGS84 +units=m +no_defs',
-AN =  '+proj=aeqd +lat_0=-90 +lon_0=0 +x_0=3714266.97719 +y_0=3402016.50625 +datum=WGS84 +units=m +no_defs',
-AS =  '+proj=aeqd +lat_0=47 +lon_0=94 +x_0=4340913.84808 +y_0=4812712.92347 +datum=WGS84 +units=m +no_defs',
-EU =  '+proj=aeqd +lat_0=53 +lon_0=24 +x_0=5837287.81977 +y_0=2121415.69617 +datum=WGS84 +units=m +no_defs',
-"NA" =  '+proj=aeqd +lat_0=52 +lon_0=-97.5 +x_0=8264722.17686 +y_0=4867518.35323 +datum=WGS84 +units=m +no_defs',
-OC =  '+proj=aeqd +lat_0=-19.5 +lon_0=131.5 +x_0=6988408.5356 +y_0=7654884.53733 +datum=WGS84 +units=m +no_defs',
-SA =  '+proj=aeqd +lat_0=-14 +lon_0=-60.5 +x_0=7257179.23559 +y_0=5592024.44605 +datum=WGS84 +units=m +no_defs')
+data("equi7grid_crs")
+crs7 <- equi7grid::crs7()
+
 m <- do.call(cbind, maps::map(plot = F)[1:2])
 library(terra)
 #> terra 1.7.71
-par(mfrow = n2mfrow(length(f)), mar = rep(0, 4), xpd = NA)
+par(mfrow = n2mfrow(length(f)), mar = rep(0, 4))
 for (i in seq_along(f)) {
   v <- vect(f[i])
   ex <- as.vector(ext(v))
-  m1 <- project(m, to = crs[i], from = "EPSG:4326")
+  m1 <- project(m, to = crs7[i], from = "EPSG:4326")
   m1 <- m1[m1[,1] >= ex[1] & m1[,1] <= ex[2] & m1[,2] >= ex[3] & m1[,2] <= ex[4], ]
   plot(NA, axes = FALSE, xlim = ex[1:2], ylim = ex[3:4], asp = 1, xlab = "", ylab = "")
   plot(v, axes = F, border = "firebrick", add = TRUE)
   lines(m1, col = rgb(0, 0, 0, .5))
+  pt <- cbind(0, c(-90, 90))
+  p0 <- project(pt, to = crs7[i], from = "EPSG:4326")
+points(p0, pch = "+", cex = 2, col = "orange")
+box(col = "lightgrey")
+
 }
 #> Warning: [project] 1972 failed transformations
 
@@ -51,3 +60,24 @@ for (i in seq_along(f)) {
 ```
 
 <img src="man/figures/README-example-1.png" width="100%" />
+
+In the package we can read the entire set from a single FlatGeobuf, but
+you’ll need to use them locally as they don’t make sense in one single
+CRS.
+
+The crs is recorded on each, but obviously we can craft our own scene
+and projection, here we just focus on the south in LAEA.
+
+``` r
+library(equi7grid)
+fgb <- system.file("extdata/equi7_longlat.fgb", package = "equi7grid", mustWork = TRUE)
+library(terra)
+x <- vect(fgb)
+m <- do.call(cbind, maps::map(plot = F)[1:2])
+crs <- "+proj=laea +lat_0=-90"
+plot(project(x[-(3:5), ], crs), col = hcl.colors(4))
+lines(project(m, to = crs, from = "EPSG:4326"))
+#> Warning: [project] 1972 failed transformations
+```
+
+<img src="man/figures/README-fgb-1.png" width="100%" />
