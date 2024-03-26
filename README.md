@@ -4,6 +4,8 @@
 # equi7grid
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/mdsumner/equi7grid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mdsumner/equi7grid/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of equi7grid is … currently a barebones get equi7 and plot it.
@@ -20,26 +22,29 @@ This plots each zone with its local centre in native Azimuthal
 Equidistant projection, the orange point shows the poles when they are
 in the frame.
 
+Note that we have a single vector source Geopackage, with the 7 zones in
+it, each in their own native projection.
+
 ``` r
 library(equi7grid)
-f <- fs::dir_ls("data-raw", regexp = "fgb$")
-data("equi7grid_crs")
-crs7 <- equi7grid::crs7()
+dsn <- "/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid.gpkg"
+
 
 m <- do.call(cbind, maps::map(plot = F)[1:2])
 library(terra)
 #> terra 1.7.71
-par(mfrow = n2mfrow(length(f)), mar = rep(0, 4))
-for (i in seq_along(f)) {
-  v <- vect(f[i])
+layers <- vector_layers(dsn)
+par(mfrow = n2mfrow(length(layers)), mar = rep(0, 4))
+for (i in seq_along(layers)) {
+  v <- vect(dsn, layers[i])
   ex <- as.vector(ext(v))
-  m1 <- project(m, to = crs7[i], from = "EPSG:4326")
+  m1 <- project(m, to = crs(v), from = "EPSG:4326")
   m1 <- m1[m1[,1] >= ex[1] & m1[,1] <= ex[2] & m1[,2] >= ex[3] & m1[,2] <= ex[4], ]
   plot(NA, axes = FALSE, xlim = ex[1:2], ylim = ex[3:4], asp = 1, xlab = "", ylab = "")
   plot(v, axes = F, border = "firebrick", add = TRUE)
   lines(m1, col = rgb(0, 0, 0, .5))
   pt <- cbind(0, c(-90, 90))
-  p0 <- project(pt, to = crs7[i], from = "EPSG:4326")
+  p0 <- project(pt, to = crs(v), from = "EPSG:4326")
 points(p0, pch = "+", cex = 2, col = "orange")
 box(col = "lightgrey")
 
@@ -81,3 +86,10 @@ lines(project(m, to = crs, from = "EPSG:4326"))
 ```
 
 <img src="man/figures/README-fgb-1.png" width="100%" />
+
+## Code of Conduct
+
+Please note that the equi7grid project is released with a [Contributor
+Code of
+Conduct](https://contributor-covenant.org/version/2/1/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.

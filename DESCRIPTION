@@ -1,6 +1,6 @@
 Package: equi7grid
 Title: Use 'Equi7Grid'
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person("Michael", "Sumner", , "mdsumner@gmail.com", role = c("aut", "cre"))
 Description: Provides helpers for 'Equi7Grid' a global system of 7 parts for regionalizing high resolution satellite imagery.
