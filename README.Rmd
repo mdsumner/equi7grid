@@ -19,13 +19,19 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/mdsumner/equi7grid/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mdsumner/equi7grid/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of equi7grid is ... currently a barebones get equi7 and plot it. 
+The goal of equi7grid is ... currently in-progress as a way to work with Equi7Grid in R. 
+
+We store the params here: 
+
+```
+https://github.com/mdsumner/equi7grid/blob/main/data-raw/params.csv
+```
 
 The [Equi7Grid](https://github.com/TUW-GEO/Equi7Grid) is a project that aims to define 7 global zones that are better than the current UTM and MGRS grid for classifying high resolution satellite imagery. 
 Here we provide a single simple endpoint Geopackage url with the 7 zones in it with straightforward layer names: 
 
 ```
-"/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid.gpkg"
+"/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid_aeqd.gpkg"
 ```
 
 The layers are these (note 'NA' is slightly unfortunate in R, but oh well). 
@@ -45,7 +51,7 @@ Note that we have a single vector source Geopackage, with the 7 zones in it, eac
 
 ```{r example}
 library(equi7grid)
-dsn <- "/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid.gpkg"
+dsn <- "/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid_aeqd.gpkg"
 
 
 m <- do.call(cbind, maps::map(plot = F)[1:2])
