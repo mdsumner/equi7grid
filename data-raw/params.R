@@ -1,12 +1,9 @@
-f <- fs::dir_ls("data-raw", regexp = "fgb$")
 crs <- equi7grid::crs7()
-layers <- names(crs)
 
-## establish the dataset
+tab <- read.table(text  = unlist(strsplit(gsub("\\+no_defs", "", crs), " ")), sep = "=")
+names(tab) <- c("param", "value")
 
-system(sprintf("ogr2ogr data-raw/equi7grid.gpkg %s -nln %s", f[1], layers[1]))
-
-for (i in tail(seq_along(layers), -1)) {
-  system(sprintf("ogr2ogr -update data-raw/equi7grid.gpkg %s -nln %s", f[i], layers[i]))
-
-}
+tab$zone <- rep(names(crs), each = 7)
+tab$param <- gsub("\\+", "", tab$param)
+tab <- dplyr::filter(tab, param != "proj")
+write.csv(tab, "data-raw/params.csv", row.names = F)

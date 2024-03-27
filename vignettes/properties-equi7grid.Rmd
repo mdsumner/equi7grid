@@ -10,13 +10,14 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  fig.width = 8, fig.height = 8
 )
 ```
 
 ```{r setup}
 library(equi7grid)
-dsn <- "/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid.gpkg"
+dsn <- "/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid_aeqd.gpkg"
 library(terra)
 layers <- vector_layers(dsn)
 ## we're just parsing a projstring to get param numbers
@@ -53,6 +54,36 @@ for (i in 1:7) {
   print(sprintf(" (in angular units) %i", as.integer(round(d[i]/111120))))
 }
 
+```
 
 
+## Tissot indicatrix
+
+```{r tissot}
+library(tissot) ## pak::pak("hypertidy/tissot")
+
+dsn <- "/vsicurl/https://github.com/mdsumner/equi7grid/raw/main/data-raw/equi7grid_aeqd.gpkg"
+library(terra)
+layers <- vector_layers(dsn)
+for (i in seq_along(layers)) {
+v <- vect(dsn, layers[i])
+
+## let's sub out aeqd and go for laea
+crs0 <- crs(v, proj = TRUE)
+crs0 <- gsub("aeqd", "laea", crs0)
+v <- project(v, crs0)
+rs <- 1200000
+xy <- geom(project(as.points(rast(align(ext(rast(v, res = rs)), c(10000)), res = rs, crs = crs(v))), "EPSG:4326"))[, c("x", "y")]
+
+
+e <- tissot(xy,
+            proj.in= "OGC:CRS84",
+            proj.out= crs(v))
+
+
+#plot(indicatrix(e, scale=3e5, n=71), add = FALSE)
+plot(v, add = F, border = "firebrick", lwd = 2)
+plot(indicatrix(e, scale=3e5, n=71), add = TRUE)
+ lines(project(m, to = crs(v), from = "EPSG:4326"))
+}
 ```

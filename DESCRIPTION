@@ -17,5 +17,6 @@ Suggests:
     knitr,
     maps,
     rmarkdown,
-    terra
+    terra,
+    tissot
 VignetteBuilder: knitr
