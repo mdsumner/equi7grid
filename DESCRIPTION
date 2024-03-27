@@ -20,3 +20,5 @@ Suggests:
     terra,
     tissot
 VignetteBuilder: knitr
+Remotes: hypertidy/tissot
+
